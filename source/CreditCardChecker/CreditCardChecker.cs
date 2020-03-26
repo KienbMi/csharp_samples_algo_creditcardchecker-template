@@ -10,7 +10,35 @@ namespace CreditCardChecker
         /// </summary>
         public static bool IsCreditCardValid(string creditCardNumber)
         {
-            throw new NotImplementedException();
+            if (creditCardNumber == null)
+            {
+                //throw new ArgumentNullException(nameof(creditCardNumber));
+                return false;
+            }
+
+            if (creditCardNumber.Length != 16)
+            {
+                return false;
+            }
+
+            int oddSum = 0;
+            int evenSum = 0;
+
+            for (int i = 0; i < creditCardNumber.Length - 1; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    evenSum += CalculateDigitSum(ConvertToInt(creditCardNumber[i]) * 2);
+                }
+                else
+                {
+                    oddSum += ConvertToInt(creditCardNumber[i]);
+                }
+            }
+
+            int checkNumber = CalculateCheckDigit(oddSum, evenSum);
+
+            return checkNumber == ConvertToInt(creditCardNumber[15]);
         }
 
         /// <summary>
@@ -19,7 +47,16 @@ namespace CreditCardChecker
         /// </summary>
         private static int CalculateCheckDigit(int oddSum, int evenSum)
         {
-            throw new NotImplementedException();
+            int checknumber;
+            int sum = oddSum + evenSum;
+
+            checknumber = sum % 10;
+            if (checknumber > 0)
+            {
+                checknumber = 10 - checknumber;
+            }
+
+            return checknumber;
         }
 
         /// <summary>
@@ -27,12 +64,18 @@ namespace CreditCardChecker
         /// </summary>
         private static int CalculateDigitSum(int number)
         {
-            throw new NotImplementedException();
+            int sum = 0;
+            do
+            {
+                sum = sum + number % 10;
+                number = number / 10;
+            } while (number > 0);
+            return sum;
         }
 
         private static int ConvertToInt(char ch)
         {
-            throw new NotImplementedException();
+            return ch - '0';
         }
     }
 }
